@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+    <head>
+        <style>
+            body{
+                background-color: black;
+            }
+            #calculator{
+                padding: 15px;
+                width:300px;
+                height:auto;
+                margin:50px auto;
+                margin-top: 50px;
+                border:1px solid rgb(155, 152, 152);
+                border-radius: 20px;
+            }
+            input{
+                background-color: black;
+                color: white;
+                width:265px;
+                margin:5px;
+                padding:10px;
+                font-size: 40px;
+                border:1px solid rgb(105, 98, 98);
+                border-radius: 10px;
+            }
+            input:hover{
+                box-shadow: 0 0 10px orange;
+            }
+            .buttons{
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 5px;
+            }
+
+            button{
+                font-size: 20px;
+                background-color: black;
+                color: white;
+                margin: 5px;
+                padding:10px;
+                border:1px solid orange;
+                border-radius:10px;
+                box-shadow: 0 4px 0 orange;
+                cursor: pointer;
+            }
+            button:hover{
+                transform: scale(1.1);
+            }
+            button:active{
+                background-color: darkorange;
+            }
+            .op{
+                border: 2px solid orange;
+                background-color:orange;
+                color: black;
+            }
+            #equal{
+                grid-column: span 2;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="calculator">
+            <input type="text" id="value" name="value" readonly>
+            <div class="buttons">
+            <button id="ac" class="op"  value="ac">AC</button>
+            <button id="del" class="op"  value="del">DEL</button>
+            <button id="per" class="op"  value="%">%</button>
+            <button id="add" class="op"  value="+">+</button>
+            <button id="seven" value="7">7</button>
+            <button id="eight" value="8">8</button>
+            <button id="nine" value="9">9</button>
+            <button id="sub" class="op"  value="-">-</button>
+            <button id="four" value="4">4</button>
+            <button id="five" value="5">5</button>
+            <button id="six" value="6">6</button>
+            <button id="mul" class="op"  value="*">*</button>
+            <button id="one" value="1">1</button>
+            <button id="two" value="2">2</button>
+            <button id="three" value="3">3</button>
+            <button id="div" class="op"  value="/">/</button>
+            <button id="zero" value="0">0</button>
+            <button id="dot"  value=".">.</button>
+            <button id="equal" class="op"  value="=">=</button>
+        </div>
+        </div>
+
+        <script>
+            let input=document.getElementById("value");
+            let one=document.getElementById("one");
+            let two=document.getElementById("two");
+            let three=document.getElementById("three");
+            let four=document.getElementById("four");
+            let five=document.getElementById("five");   
+            let six=document.getElementById("six");
+            let seven=document.getElementById("seven");
+            let eight=document.getElementById("eight");
+            let nine=document.getElementById("nine");
+            let zero=document.getElementById("zero"); 
+            let ac=document.getElementById("ac"); 
+            let del=document.getElementById("del"); 
+            let per=document.getElementById("per"); 
+            let sub=document.getElementById("sub"); 
+            let mul=document.getElementById("mul");
+            let add=document.getElementById("add");
+            let div=document.getElementById("div");
+            let equal=document.getElementById("equal");
+            let dot=document.getElementById("dot"); 
+            one.onclick = function() {
+    input.value += one.value;
+};
+two.onclick = function() {
+    input.value += two.value;
+};
+three.onclick = function() {
+    input.value += three.value;
+};
+four.onclick = function() {
+    input.value += four.value;
+};
+five.onclick = function() {
+    input.value += five.value;
+};
+six.onclick = function() {
+    input.value += six.value;
+};
+seven.onclick = function() {
+    input.value += seven.value;
+};
+eight.onclick = function() {
+    input.value += eight.value;
+};
+nine.onclick = function() {
+    input.value += nine.value;
+};
+zero.onclick = function() {
+    input.value += zero.value;
+};
+ac.onclick=function()
+{
+    input.value="";
+};
+del.onclick=function()
+{
+    if(input.value.length>0)
+    {
+        input.value=input.value.slice(0,-1);
+    }
+};
+add.onclick = function() {
+    input.value += "+";
+};
+sub.onclick = function() {
+    input.value += "-";
+};
+mul.onclick = function() {
+    input.value += "*";
+};
+div.onclick = function() {
+    input.value += "/";
+};
+per.onclick = function() {
+    input.value += "%";
+};
+dot.onclick = function() {
+    input.value += ".";
+};
+equal.onclick=function(){
+    try{
+        input.value=eval(input.value);
+    }
+    catch (e) {
+        input.value = "Error";
+    }
+};
+        </script>
+    </body>
+</html>

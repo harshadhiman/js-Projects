@@ -1,0 +1,153 @@
+<html>
+    <head>
+        <title>To-Do-list</title>
+        <style>
+            body{
+                background-color: black;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            div{
+                text-align:center;
+                width: 500px;
+                height: auto;
+                color: aliceblue;
+                background-color: #222;
+                padding: 20px;
+                border-radius: 10px;
+                border-color:orange;
+                box-shadow:0 0 10px orange;
+            }
+            button:hover
+            {
+                background-color: darkorange;
+                box-shadow: 0 4px 8px rgba(255, 165, 0, 0.4);
+            }
+            tr:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+                
+            }
+            h1{
+                border-color:orange;
+                box-shadow:0 0 10px orange;
+            }
+            #task:hover {
+            border-color: orange;
+            box-shadow: 0 0 20px orange;
+            outline: none;
+        }
+            td button {
+                border: 2px solid orange;
+                background-color:orange;
+                color: white;
+                border-radius: 5px;
+                padding: 5px 10px;
+            }
+
+            input{
+                border:2px double white;
+                border-radius: 5px;
+                padding:5px;
+            }
+            button{
+                cursor: pointer;
+                color:white;
+                border:2px solid orange;
+                border-radius: 5px;
+                background-color: orange;
+            }
+            table{
+                margin: 20px auto;
+               color:white;
+               border-collapse: collapse;
+               border-radius: 10%
+            }
+           
+            #add{
+                margin-left:10px;
+                padding:5px;
+            }
+            table, tr {
+                border:2px solid rgb(248, 176, 82);
+                border-top-left-radius: 10px;
+                box-shadow: 0 0 10px orange;
+                
+            }
+            td{
+                padding:10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+        <h1>TO-DO LIST</h1>
+        <input type="text" id="task" name="task" placeholder="Enter your task...">
+        <button id="add">ADD</button>
+        <table id="display"></table>
+        </div>
+        <script>
+            let btn= document.getElementById("add");
+            let data=document.getElementById("task");
+            data.addEventListener("keypress",(e)=>{
+                if(e.key==="Enter")
+                {
+                    btn.click();
+                }
+            });
+            btn.addEventListener("click",(event)=>{
+                event.preventDefault();
+                let task=document.getElementById("task").value;
+                if(task==="")
+                {
+                    return;
+                }
+                let table=document.getElementById("display");
+                let row=document.createElement("tr");
+                let del=document.createElement("button");
+                let td0=document.createElement("td");
+                let td1=document.createElement("td");
+                let td2=document.createElement("td");
+                let td3=document.createElement("td");
+                let checkbox=document.createElement("input");
+                checkbox.type="checkbox";
+                checkbox.addEventListener("change",()=>{
+                    if(checkbox.checked)
+                    {
+                        row.style.textDecoration="line-through";
+                        row.style.color="grey";
+                    }
+                    else{
+                        row.style.textDecoration="none";
+                        row.style.color="white";
+                    }
+                    saveTasks();
+                });
+                let time=new Date().toLocaleTimeString();
+                del.textContent="DELETE";
+                td0.appendChild(checkbox);
+                td1.textContent=task;
+                td2.textContent=time;
+                td3.appendChild(del);
+                row.appendChild(td0);
+                row.appendChild(td1);
+                row.appendChild(td2);
+                row.appendChild(td3);
+                table.appendChild(row);
+
+                del.addEventListener("click",(event)=>{
+                    if(confirm("Do you want to delete!"))
+                    {
+                        table.removeChild(row);
+                    }
+                    else{
+                        return;
+                    }
+            });
+            document.getElementById("task").value="";
+            });
+        </script>
+    </body>
+</html>

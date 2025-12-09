@@ -1,0 +1,180 @@
+<!doctype html>
+<html >
+    <head>
+        <title>My Weather Webpage</title>
+        <style>
+            body{
+                /* background-image: url("day1.jpg"); */
+                background-size: cover;
+                margin: 0;
+                padding: 0;
+                
+            }
+            #bg-video {
+                position: fixed;
+                opacity: 0.8;
+                top: 0;
+                left: 0;
+                min-width: 100%;
+                min-height: 100%;
+                width: auto;
+                height: auto;
+                z-index: -1;
+                object-fit: cover;
+                filter: brightness(1); /* optional, darken video for text readability */
+}
+            .parent{
+                max-width: 50%;
+                margin: 40px auto;
+                background-color: rgba(255, 255, 255,0.5);
+                padding: 20px;
+                border-radius: 10px;
+                height:500px;
+                text-align: center;
+                box-shadow: 0 0 10px white;
+            }
+            input{
+                margin-top: 50px;
+                font-size: 20px;
+                background-color: white;
+                border:2px solid white;
+                border-radius: 15px;
+                width:200px;
+                padding:10px;
+                box-shadow: 0 0 10px white;
+            }
+            button{
+                font-size: 20px;
+                margin-top: 50px;
+                margin-left: 10px;
+                background-color: white;
+                border:2px solid white;
+                border-radius: 15px;
+                padding:10px;
+                box-shadow: 0 0 10px white;
+                cursor:pointer;
+            }
+            #cityname
+            {
+                font-size: 40px;
+                color:black;
+            }
+            #celsius{
+                margin-top:10px;
+                font-size: 50px;
+                color:black;
+                font-weight: bold;
+                text-shadow: 0 0 10px white;
+            }
+            .container{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 40px ;
+            }
+            #wind,#humidity , #cityname,#sunrise,#sunset{
+                box-shadow: 0 0 10px white;
+                margin:0px;
+                border-radius: 10px;
+                font-weight: bold;
+                font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                text-shadow: 0 0 10px white;
+            }
+        </style>
+    </head>
+    <body id="body"> 
+        <video autoplay muted loop id="bg-video">
+            <source src="assets/day-video.mp4" type="video/mp4">
+          </video>
+        <div class="parent">
+            <input type="text" id="city" name="city" placeholder="Enter city name....." autofocus>
+            <button id="search">Search</button>
+            <br>
+            <div id="cityname"></div>
+            <div id="celsius"></div>
+            <div class="container">
+            <div id="sunrise"></div>
+            <div id="sunset"></div>
+            <div id="wind"></div>
+            <div id="humidity"></div>
+        </div>
+        </div>
+        <script>
+            let bgVideo = document.getElementById("bg-video");
+            let input=document.getElementById('city');
+            let body = document.getElementById('body');
+            let search = document.getElementById('search');
+            const date=new Date();
+            const hours=date.getHours();
+            if(hours<6||hours>18)
+                {
+                    bgVideo.querySelector("source").src = "assets/night-video.mp4"; 
+                    bgVideo.load();
+                }
+            else
+            {
+                input.style.border="2px solid black";
+                search.style.border="2px solid black";
+                document.querySelector('.parent').style.boxShadow="0 0 10px black";
+
+            }
+            input.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                search.click();
+            }
+            });
+            search.addEventListener("click", function () {
+                let city = document.getElementById("city").value;
+                console.log("City entered:", city);  // <-- Debug
+                getWeather(city);
+            });
+        
+            function getWeather(city) {
+                const apiKey = "8e81a7f87466ff75c8be8ff60998a2e9";
+                const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`;
+        
+                console.log("Fetching URL:", url);  // <-- Debug
+        
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("City not found");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Weather data:", data);  // <-- Debug
+
+                        document.getElementById("cityname").innerHTML = `<p>${data.name}</p>`;
+                        document.getElementById("celsius").innerHTML = `<p>${data.main.temp} °C</p>`;
+                        let sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+                        let sunset = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+
+                        document.getElementById("sunrise").innerHTML = `<p>Sunrise<br>${sunrise}</p>`;
+                        document.getElementById("sunset").innerHTML = `<p>Sunset<br>${sunset}</p>`;
+
+                        document.getElementById("wind").innerHTML = `<p>Wind Speed<br>${data.wind.speed} m/s</p>`;
+                        document.getElementById("humidity").innerHTML=`<p>Humidity<br>${data.main.humidity}%</p>`;
+                        document.getElementById("city").value = "";
+                        document.getElementById("cityname").style.boxShadow="none";
+                        document.getElementById("sunrise").style.padding="10px";
+                        document.getElementById("sunset").style.padding="10px";
+                        document.getElementById("wind").style.padding="10px";
+                        document.getElementById("humidity").style.padding="10px";
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);  // <-- Debug
+                        document.getElementById("cityname").innerHTML ="";
+                        document.getElementById("celsius").innerHTML = `<h2 style="color:black;">${error.message}</h2>`;
+                        document.getElementById("wind").innerHTML = "";
+                        document.getElementById("humidity").innerHTML="";
+                        document.getElementById("sunrise").innerHTML ="";
+                        document.getElementById("sunset").innerHTML ="";
+
+                    });
+            }
+        </script>
+        
+        
+    </body>
+</html>

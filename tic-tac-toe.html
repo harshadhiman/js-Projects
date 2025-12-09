@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+    <head>
+        <title>TIC-TAC-TOE</title>
+        <style>
+            body{
+                background-color: black;
+            }
+            h1{
+                text-align: center;
+                font-size: 50px;
+                color:white;
+                text-shadow: 0 0 20px pink; 
+                box-shadow: 0 0 20px pink;
+            }
+            #container{
+                margin: 20px auto;
+                width: 300px;
+            }
+            .center{
+                display: grid;
+                grid-template-columns: repeat(3,1fr);
+                gap:5px;     
+            }
+            .boxes
+            {
+                text-shadow: 0 0 10px blue;
+                border: 2px solid rgb(13, 13, 64);
+                height: 100px; 
+                color:pink;
+                font-size: 50px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor:pointer;
+                box-shadow: 0 0 20px pink;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+            .boxes:hover{
+                transform: scale(1.1);
+            }
+            button{
+                font-size:small;
+                color:white;
+                background-color:rgba(244, 127, 201, 0.963);
+                font-weight: bold;
+                border:2px double rgba(236, 122, 194, 0.963);
+                border-top-right-radius: 20px ;
+                border-bottom-left-radius:20px;
+                /* border-radius: 50px; */
+                padding:20px;
+                width:auto;
+                cursor: pointer;
+                margin-left: 40px;
+                background: linear-gradient(
+                    135deg,
+                    #b21b9b 0%,
+                    #ca1d88 50%,
+                    #cb02aa 100%
+                    );
+                    box-shadow: 
+                    inset 0 2px 5px rgba(255, 255, 255, 0.4),
+                    inset 0 -3px 6px rgba(0, 0, 0, 0.3), 
+                    0 5px 10px rgba(0, 0, 0, 0.25);
+            }
+            
+            .output{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            } 
+            #player , #winner,#scoreX,#scoreO{
+                font-weight: bold;
+                background: linear-gradient(
+                    135deg,
+                    #b21b9b 0%,
+                    #ca1d88 50%,
+                    #cb02aa 100%
+                    );
+                box-shadow: 
+                    inset 0 2px 5px rgba(255, 255, 255, 0.4),
+                    inset 0 -3px 6px rgba(0, 0, 0, 0.3), 
+                    0 5px 10px rgba(0, 0, 0, 0.25);
+                font-size: small;
+                border:2px double rgba(236, 122, 194, 0.963);
+                border-top-right-radius: 20px ;
+                border-bottom-left-radius: 20px;
+                padding:20px;
+                margin-left: 40px;
+                color:white;
+                text-shadow: 0 0 10px brown;
+            }
+        </style>
+    </head>
+    <body>
+        <audio id="clickSound" src="assets/click.mp3"></audio>
+        <audio id="draw" src="assets/draw.mp3"></audio>
+        <audio id="win" src="assets/win.mp3"></audio>
+        <audio id="gamestart" src="assets/gamestart.mp3"></audio>
+        <h1>TIC-TAC-TOE</h1>
+        <div class="output">
+        <Button id="newGame">New Game</Button>
+        <Button id="resetButton" onclick="reset()">Play Again</Button>
+        <div id="player"></div>
+        <div id="winner">Game started.</div>
+        <div id="scoreX">Score of X: <span id="spanX">0</span></div>
+        <div id="scoreO">Score of O: <span id="spanO">0</span></div>
+        </div>
+        <div id="container" >
+            <div class="center">
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+            </div>
+        </div>
+        <script>
+            const clickSound = document.getElementById("clickSound");
+            const draw=document.getElementById("draw");
+            const win=document.getElementById("win");
+            const gamestart=document.getElementById("gamestart");
+            const body=document.querySelector("body");
+            let newGame=document.getElementById("newGame");
+            let resetButton=document.getElementById("resetButton");
+            let playerTurn=document.getElementById("player");
+            let winner=document.getElementById("winner");
+            let spanX=document.getElementById('spanX');
+            let scoreX=0;
+            let spanO=document.getElementById('spanO');
+            let scoreO=0;
+            const boxes=document.querySelectorAll('.boxes');
+            let currentplayer='X';
+            playerTurn.textContent=currentplayer+" player's turn";
+            let gameOver=false;
+            function checkwinner()
+            {
+                const winPattern=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+                for(const [a,b,c] of winPattern)
+                {
+                    const val=boxes[a].textContent;
+                    if(val&&val===boxes[b].textContent&&val===boxes[c].textContent)
+                    {
+                        boxes[a].style.textDecoration= "line-through";
+                        boxes[b].style.textDecoration= "line-through";
+                        boxes[c].style.textDecoration= "line-through";
+                        win.play();
+                        winner.textContent="player "+ currentplayer+" is win.";
+                        if(currentplayer==='X')
+                        {
+                            scoreX++;
+                            spanX.textContent=scoreX;
+                        }
+                        else
+                        {
+                            scoreO++;
+                            spanO.textContent=scoreO;
+                        }
+                        winner.style.fontSize="50px";
+                        gameOver=true;
+                        setTimeout(reset, 2000); 
+                        return;
+                    }
+                }
+                if ([...boxes].every(box => box.textContent !== '')) {
+                    winner.textContent = "It's a draw!";
+                    winner.style.fontSize = "50px";
+                    gameOver = true;
+                    draw.play();
+                    setTimeout(reset, 2000);
+                }
+            };
+            newGame.addEventListener('click',()=>{
+                gamestart.play();
+                for(const box of boxes)
+                {
+                    box.textContent='';
+                    box.style.textDecoration= "none";
+                }
+                body.style.backgroundColor="black";
+                currentplayer='X';
+                winner.textContent="Game started.";
+                winner.style.fontSize="small";
+                scoreX=0;
+                spanX.textContent=scoreX;
+                scoreO=0;
+                spanO.textContent=scoreO;
+                playerTurn.textContent=currentplayer+" player's turn";
+                gameOver=false;
+            });
+            function reset()
+            {
+                for(const box of boxes)
+                {
+                    box.textContent='';
+                    box.style.textDecoration= "none";
+                }
+                body.style.backgroundColor="black";
+                currentplayer='X';
+                winner.textContent = "Next round starting...";                
+                winner.style.fontSize="small";
+                playerTurn.textContent=currentplayer+" player's turn";
+                gameOver=false;
+                
+            };
+            boxes.forEach(box=>{
+                box.addEventListener('click',()=>{
+                    if(box.textContent===''&&gameOver!==true)
+                    {
+                        clickSound.play();
+                        box.textContent=currentplayer;
+                        box.style.color=currentplayer==='X'?"white": "pink";
+                        checkwinner();
+                        if(gameOver!==true)
+                        {
+                            currentplayer=currentplayer==='X'?'O':'X';
+                        playerTurn.textContent=currentplayer+" player's turn";
+
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
